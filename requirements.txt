@@ -1,0 +1,10 @@
+--extra-index-url https://download.pytorch.org/whl/cu132
+torch
+torchvision
+
+lpips
+tqdm
+ipykernel
+matplotlib
+opencv-python
+scikit-image
