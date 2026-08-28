@@ -39,9 +39,9 @@ class Upsampler(nn.Sequential):
             raise NotImplementedError
         super(Upsampler, self).__init__(*layers)
 
-class FasterRCAN(nn.Module):
+class FasterRCN(nn.Module):
     def __init__(self,big = 128, small = 64, num_groups = 2, ratio = 4):
-        super(FasterRCAN, self).__init__()
+        super(FasterRCN, self).__init__()
         self.scale = 1
         self.first_part = nn.Sequential(
             nn.Conv2d(3, big, kernel_size=3, padding=1),
