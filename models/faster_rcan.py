@@ -55,10 +55,12 @@ class CBAM(nn.Module):
     def __init__(self, channels, reduction_rate=16, kernel_size=7):
         super(CBAM, self).__init__()
         self.channel_attention = ChannelAttention(channels,reduction_rate)
+        self.conv = nn.Conv2d(channels, channels, kernel_size=1)
         self.spatial_attention = SpatialAttention(kernel_size)
         
     def forward(self, x):
         out = self.channel_attention(x)
+        out = self.conv(out + x)
         out = self.spatial_attention(out)
         
         return out
@@ -72,7 +74,7 @@ class ResidualBlockAttention(nn.Module):
             nn.PReLU(num_filters),
             nn.Conv2d(num_filters, num_filters, kernel_size=3, padding=1),
         )
-        self.attention = ChannelAttention(num_filters)
+        self.attention = CBAM(num_filters)
     def forward(self,x):
         res = self.block(x)
         res = self.attention(res)
