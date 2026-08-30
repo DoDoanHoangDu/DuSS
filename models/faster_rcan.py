@@ -34,7 +34,7 @@ class ResidualBlockAttention(nn.Module):
         return x + self.scale * res
 
 class ResidualGroupAttention(nn.Module):
-    def __init__(self, num_filters, num_blocks = 4):
+    def __init__(self, num_filters, num_blocks = 24):
         super(ResidualGroupAttention, self).__init__()
         layers = [ResidualBlockAttention(num_filters) for _ in range(num_blocks)]
         layers.append(nn.Conv2d(num_filters, num_filters, 3, padding=1, bias=True))
@@ -59,7 +59,7 @@ class Upsampler(nn.Sequential):
         super(Upsampler, self).__init__(*layers)
 
 class FasterRCAN(nn.Module):
-    def __init__(self,big = 128, small = 64, num_groups = 2, ratio = 4):
+    def __init__(self,big = 128, small = 64, num_groups = 12, ratio = 4):
         super(FasterRCAN, self).__init__()
         self.scale = 1
         self.first_part = nn.Sequential(
