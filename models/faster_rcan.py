@@ -59,7 +59,7 @@ class Upsampler(nn.Sequential):
         super(Upsampler, self).__init__(*layers)
 
 class FasterRCAN(nn.Module):
-    def __init__(self,big = 128, small = 64, num_groups = 10, ratio = 4):
+    def __init__(self,big = 128, small = 32, num_groups = 16, ratio = 4):
         super(FasterRCAN, self).__init__()
         self.scale = 1
         self.first_part = nn.Sequential(
