@@ -12,8 +12,6 @@ def extract_paired_patches(
     lr_folder,
     output_hr_folder,
     output_lr_folder,
-    patch_size=256,
-    stride=256,
     lr_suffix="x4",
     scale=4,
 ):
@@ -26,7 +24,6 @@ def extract_paired_patches(
     output_lr_folder.mkdir(parents=True, exist_ok=True)
 
     extensions = {".jpg", ".jpeg", ".png", ".bmp", ".webp"}
-    lr_patch_size = patch_size // scale
     count = 0
 
     hr_images = [
@@ -51,6 +48,10 @@ def extract_paired_patches(
 
         hr_h, hr_w = hr.shape[:2]
         lr_h, lr_w = lr.shape[:2]
+
+        patch_size = min(hr_h, hr_w)
+        stride = patch_size
+        lr_patch_size = min(lr_h, lr_w)
 
         if hr_w != lr_w * scale or hr_h != lr_h * scale:
             print(
@@ -111,8 +112,6 @@ extract_paired_patches(
     lr_folder="Data/DIV2K_valid_LR_bicubic/X4",
     output_hr_folder="Data/valid_HR",
     output_lr_folder="Data/valid_LR",
-    patch_size=256 * 4,
-    stride=256 * 4,
     lr_suffix="x4",
     scale=4
 )
