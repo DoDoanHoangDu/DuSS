@@ -21,11 +21,11 @@ class LayerNorm(nn.Module):
 # ---------------------------------------------------------------------------------------------------------------------
 # FFN
 class FeedForward(nn.Module):
-    def __init__(self, dim, expansion_factor, bias = False):
+    def __init__(self, dim, expansion_factor = 2, bias = False):
         super(FeedForward, self).__init__()
         hidden_features = int(dim * expansion_factor)
         self.project_in = nn.Conv2d(dim, hidden_features*2, kernel_size=1, bias=bias)
-        self.dwconv = nn.Conv2d(hidden_features*2, hidden_features*2, kernel_size=3, stride=1, padding=1, groups=hidden_features*2, bias=bias)
+        self.dwconv = nn.Conv2d(hidden_features*2, hidden_features*2, kernel_size=3, padding=1, groups=hidden_features*2, bias=bias)
         self.GELU = nn.GELU()
         self.project_out = nn.Conv2d(hidden_features, dim, kernel_size=1, bias=bias)
 
@@ -162,18 +162,18 @@ class SparseAttention(nn.Module):
             preds[0, :, i:i + k, j:j + k] += outs[cnt, :, :, :]
             count_mt[0, 0, i:i + k, j:j + k] += 1.
 
-        del outs
+        #del outs
         #torch.cuda.empty_cache()
         return preds / count_mt
 
 # ---------------------------------------------------------------------------------------------------------------------
 class MHDLSA(nn.Module):
-    def __init__(self, dim, kernel_size=7, group_channels=8, expansion_factor=2.):
+    def __init__(self, dim, kernel_size=7, group_channels=8):
         super(MHDLSA, self).__init__()
         self.norm1 = LayerNorm(dim)
         self.IDynamicDWConv = DynamicConvBlock(dim, kernel_size, group_channels)
         self.norm2 = LayerNorm(dim)
-        self.ffn = FeedForward(dim, expansion_factor)
+        self.ffn = FeedForward(dim)
 
     def forward(self, x):
         x = self.IDynamicDWConv(self.norm1(x)) + x
@@ -181,12 +181,12 @@ class MHDLSA(nn.Module):
         return x
 
 class SparseGSA(nn.Module):
-    def __init__(self, dim, num_heads=8, expansion_factor=2.):
+    def __init__(self, dim, num_heads=8):
         super(SparseGSA, self).__init__()
         self.norm1 = LayerNorm(dim)
         self.attn = SparseAttention(dim, num_heads)
         self.norm2 = LayerNorm(dim)
-        self.ffn = FeedForward(dim, expansion_factor)
+        self.ffn = FeedForward(dim)
 
     def forward(self, x, tlc_flag = True):
         x = self.attn(self.norm1(x), tlc_flag) + x
@@ -223,7 +223,6 @@ class UpsampleOneStep(nn.Sequential):
         m.append(nn.Conv2d(num_filters, 3 * (scale**2), kernel_size=3, padding=1))
         m.append(nn.PixelShuffle(scale))
         super(UpsampleOneStep, self).__init__(*m)
-
 
 # Traditional Upsample from SwinIR EDSR RCAN
 class Upsample(nn.Sequential):
