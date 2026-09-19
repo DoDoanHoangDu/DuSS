@@ -172,12 +172,12 @@ class MHDLSA(nn.Module):
         super(MHDLSA, self).__init__()
         self.norm1 = LayerNorm(dim)
         self.IDynamicDWConv = DynamicConvBlock(dim, kernel_size, group_channels)
-        self.norm2 = LayerNorm(dim)
-        self.ffn = FeedForward(dim)
+        #self.norm2 = LayerNorm(dim)
+        #self.ffn = FeedForward(dim)
 
     def forward(self, x):
         x = self.IDynamicDWConv(self.norm1(x)) + x
-        x = self.ffn(self.norm2(x)) + x
+        #x = self.ffn(self.norm2(x)) + x
         return x
 
 class SparseGSA(nn.Module):
@@ -196,7 +196,7 @@ class SparseGSA(nn.Module):
 # ---------------------------------------------------------------------------------------------------------------------
 # BuildBlocks
 class RHDTG(nn.Module):
-    def __init__(self, dim, blocks=4):
+    def __init__(self, dim, blocks=5):
         super(RHDTG, self).__init__()
         body = nn.ModuleList()
         for _ in range(blocks):
