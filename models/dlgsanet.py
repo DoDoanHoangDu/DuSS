@@ -62,11 +62,11 @@ class FeedForward(nn.Module):
 from models.dynamic_conv import DynamicConv
 
 class DynamicConvBlock(nn.Module):
-    def __init__(self, dim, kernel_size, group_channels):
+    def __init__(self, dim, kernel_size, group_channels, squeeze=2):
         super().__init__()
-        self.conv0 = nn.Conv2d(dim, dim, 1, bias=False)
-        self.conv = DynamicConv(dim, kernel_size, group_channels)
-        self.conv1 = nn.Conv2d(dim, dim, 1, bias=False)
+        self.conv0 = nn.Conv2d(dim, dim//squeeze, 1, bias=False)
+        self.conv = DynamicConv(dim//squeeze, kernel_size, group_channels)
+        self.conv1 = nn.Conv2d(dim//squeeze, dim, 1, bias=False)
 
     def forward(self, x):
         x = self.conv0(x)
@@ -242,7 +242,7 @@ class Upsample(nn.Sequential):
 # ---------------------------------------------------------------------------------------------------------------------
 # Network
 class DLGSANet(nn.Module):
-    def __init__(self, dim=64, groups=6, scale=4, upsampler = "pixelshuffledirect"):
+    def __init__(self, dim=64, groups=7, scale=4, upsampler = "pixelshuffledirect"):
         super(DLGSANet, self).__init__()
         self.register_buffer('mean', torch.tensor([0.5, 0.5, 0.5]).view(1, 3, 1, 1))
         self.first_part = nn.Conv2d(3, dim, kernel_size=3, padding=1, bias=False)
