@@ -2,3 +2,4 @@ venv/
 Data/
 __pycache__/
 *.py[cod]
+Data.zip
