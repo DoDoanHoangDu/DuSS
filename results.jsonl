@@ -36,3 +36,6 @@
 {"model_type": "FasterRCAN", "learning_rate": 6.25e-06, "epochs": 200, "psnr": 28.928342819213867, "ssim": 0.8342567284613202}
 {"model_type": "FasterRCAN", "learning_rate": 3.125e-06, "epochs": 200, "psnr": 28.938047409057617, "ssim": 0.8345233241359675}
 {"model_type": "DLGSANet", "learning_rate": 0.001, "epochs": 200, "psnr": 27.080049514770508, "ssim": 0.7854819206927534}
+{"model_type": "DLGSANet", "learning_rate": 0.0005, "epochs": 200, "psnr": 27.966503143310547, "ssim": 0.8083720851273613}
+{"model_type": "DLGSANet", "learning_rate": 0.00025, "epochs": 200, "psnr": 28.55205535888672, "ssim": 0.8243596094523373}
+{"model_type": "DLGSANet", "learning_rate": 0.000125, "epochs": 200, "psnr": 28.733869552612305, "ssim": 0.8294600006473809}
