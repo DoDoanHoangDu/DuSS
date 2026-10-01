@@ -35,12 +35,7 @@
 {"model_type": "FasterRCAN", "learning_rate": 1.25e-05, "epochs": 200, "psnr": 28.899843215942383, "ssim": 0.8337176277852798}
 {"model_type": "FasterRCAN", "learning_rate": 6.25e-06, "epochs": 200, "psnr": 28.928342819213867, "ssim": 0.8342567284613202}
 {"model_type": "FasterRCAN", "learning_rate": 3.125e-06, "epochs": 200, "psnr": 28.938047409057617, "ssim": 0.8345233241359675}
-{"model_type": "DLGSANet", "learning_rate": 0.001, "epochs": 200, "psnr": 27.072595596313477, "ssim": 0.7852215189011631}
-{"model_type": "DLGSANet", "learning_rate": 0.0005, "epochs": 200, "psnr": 28.044015884399414, "ssim": 0.8114494791041297}
-{"model_type": "DLGSANet", "learning_rate": 0.00025, "epochs": 200, "psnr": 28.644845962524414, "ssim": 0.8270787772053708}
-{"model_type": "DLGSANet", "learning_rate": 0.000125, "epochs": 200, "psnr": 28.78812026977539, "ssim": 0.8310399468663376}
-{"model_type": "DLGSANet", "learning_rate": 6.25e-05, "epochs": 200, "psnr": 28.858816146850586, "ssim": 0.8327982789800258}
-{"model_type": "DLGSANet", "learning_rate": 3.125e-05, "epochs": 200, "psnr": 28.878381729125977, "ssim": 0.8333321470877134}
-{"model_type": "DLGSANet", "learning_rate": 1.5625e-05, "epochs": 200, "psnr": 28.896902084350586, "ssim": 0.8336634781573194}
-{"model_type": "DLGSANet", "learning_rate": 7.8125e-06, "epochs": 200, "psnr": 28.900781631469727, "ssim": 0.8337569045308824}
-{"model_type": "DLGSANet", "learning_rate": 3.90625e-06, "epochs": 200, "psnr": 28.903528213500977, "ssim": 0.8338523377744584}
+{"model_type": "DLGSANet", "learning_rate": 0.001, "epochs": 200, "psnr": 26.664125442504883, "ssim": 0.7675669865307673}
+{"model_type": "DLGSANet", "learning_rate": 0.0005, "epochs": 200, "psnr": 26.97247314453125, "ssim": 0.7803813961036323}
+{"model_type": "DLGSANet", "learning_rate": 0.00025, "epochs": 200, "psnr": 28.05121612548828, "ssim": 0.8116946756459624}
+{"model_type": "DLGSANet", "learning_rate": 0.000125, "epochs": 200, "psnr": 28.406230926513672, "ssim": 0.821072375955641}

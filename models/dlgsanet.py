@@ -21,7 +21,7 @@ class LayerNorm(nn.Module):
 # ---------------------------------------------------------------------------------------------------------------------
 # FFN
 class FeedForward(nn.Module):
-    def __init__(self, dim, expansion_factor = 1, bias = False):
+    def __init__(self, dim, expansion_factor = 0.5, bias = False):
         super(FeedForward, self).__init__()
         hidden_features = int(dim * expansion_factor)
         self.project_in = nn.Conv2d(dim, hidden_features*2, kernel_size=1, bias=bias)
@@ -242,7 +242,7 @@ class Upsample(nn.Sequential):
 # ---------------------------------------------------------------------------------------------------------------------
 # Network
 class DLGSANet(nn.Module):
-    def __init__(self, dim=64, groups=6, scale=4, upsampler = "pixelshuffledirect"):
+    def __init__(self, dim=64, groups=7, scale=4, upsampler = "pixelshuffledirect"):
         super(DLGSANet, self).__init__()
         self.register_buffer('mean', torch.tensor([0.5, 0.5, 0.5]).view(1, 3, 1, 1))
         self.first_part = nn.Conv2d(3, dim, kernel_size=3, padding=1, bias=False)
