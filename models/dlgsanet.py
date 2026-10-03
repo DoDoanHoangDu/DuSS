@@ -21,19 +21,20 @@ class LayerNorm(nn.Module):
 # ---------------------------------------------------------------------------------------------------------------------
 # FFN
 class FeedForward(nn.Module):
-    def __init__(self, dim, expansion_factor = 1, bias = False):
-        super(FeedForward, self).__init__()
-        hidden_features = int(dim * expansion_factor)
-        self.project_in = nn.Conv2d(dim, hidden_features*2, kernel_size=1, bias=bias)
-        self.dwconv = nn.Conv2d(hidden_features*2, hidden_features*2, kernel_size=3, padding=1, groups=hidden_features*2, bias=bias)
-        self.GELU = nn.GELU()
-        self.project_out = nn.Conv2d(hidden_features, dim, kernel_size=1, bias=bias)
-
-    def forward(self, x):
-        x = self.project_in(x)
-        x1, x2 = self.dwconv(x).chunk(2, dim=1)
-        x = self.GELU(x1) * x2
-        x = self.project_out(x)
+    def __init__(self, in_features, expansion_factor=2):
+        super().__init__()
+        hidden_features = int(in_features * expansion_factor)
+        self.body = nn.Sequential(
+            nn.Linear(in_features, hidden_features),
+            nn.GELU(),
+            nn.Linear(hidden_features, in_features))
+        
+    def forward(self, x): # BCHW -> B(HW)C 
+        b, c, h, w = x.shape 
+        x = rearrange(x, 'b c h w -> b (h w) c') 
+        # FFN operates on the channel dimension C 
+        x = self.body(x) # B(HW)C -> BCHW 
+        x = rearrange(x, 'b (h w) c -> b c h w', h=h, w=w) 
         return x
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -242,7 +243,7 @@ class Upsample(nn.Sequential):
 # ---------------------------------------------------------------------------------------------------------------------
 # Network
 class DLGSANet(nn.Module):
-    def __init__(self, dim=64, groups=6, scale=4, upsampler = "pixelshuffledirect"):
+    def __init__(self, dim=64, groups=7, scale=4, upsampler = "pixelshuffledirect"):
         super(DLGSANet, self).__init__()
         self.register_buffer('mean', torch.tensor([0.5, 0.5, 0.5]).view(1, 3, 1, 1))
         self.first_part = nn.Conv2d(3, dim, kernel_size=3, padding=1, bias=False)
