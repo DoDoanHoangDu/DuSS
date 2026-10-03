@@ -39,3 +39,8 @@
 {"model_type": "DLGSANet", "learning_rate": 0.0005, "epochs": 200, "psnr": 26.97247314453125, "ssim": 0.7803813961036323}
 {"model_type": "DLGSANet", "learning_rate": 0.00025, "epochs": 200, "psnr": 28.05121612548828, "ssim": 0.8116946756459624}
 {"model_type": "DLGSANet", "learning_rate": 0.000125, "epochs": 200, "psnr": 28.406230926513672, "ssim": 0.821072375955641}
+{"model_type": "DLGSANet", "learning_rate": 6.25e-05, "epochs": 200, "psnr": 28.532480239868164, "ssim": 0.8245073061284329}
+{"model_type": "DLGSANet", "learning_rate": 3.125e-05, "epochs": 200, "psnr": 28.596691131591797, "ssim": 0.8260748306655387}
+{"model_type": "DLGSANet", "learning_rate": 1.5625e-05, "epochs": 200, "psnr": 28.617111206054688, "ssim": 0.8265217880430831}
+{"model_type": "DLGSANet", "learning_rate": 7.8125e-06, "epochs": 200, "psnr": 28.629777908325195, "ssim": 0.8268749972807165}
+{"model_type": "DLGSANet", "learning_rate": 3.90625e-06, "epochs": 200, "psnr": 28.630146026611328, "ssim": 0.8269837419256204}
