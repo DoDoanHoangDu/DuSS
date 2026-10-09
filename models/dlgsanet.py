@@ -77,21 +77,19 @@ class DynamicConvBlock(nn.Module):
 # ---------------------------------------------------------------------------------------------------------------------
 # Multi-DConv Head Transposed Self-Attention (MDTA)
 class SparseAttention(nn.Module):
-    def __init__(self, dim, num_heads, bias=False):
+    def __init__(self, dim, num_heads, bias=False, squeeze = 2):
         super(SparseAttention, self).__init__()
         self.num_heads = num_heads
         self.temperature = nn.Parameter(torch.ones(num_heads, 1, 1))
 
-        self.qkv = nn.Conv2d(dim, dim * 3, kernel_size=1, bias=bias)
-        self.qkv_dwconv = nn.Conv2d(dim * 3, dim * 3, kernel_size=3, padding=1, groups=dim * 3, bias=bias)
-        self.project_out = nn.Conv2d(dim, dim, kernel_size=1, bias=bias)
+        inner_dim = dim // squeeze
+        self.qkv = nn.Conv2d(dim, inner_dim * 3, kernel_size=1, bias=bias)
+        self.qkv_dwconv = nn.Conv2d(inner_dim * 3, inner_dim * 3, kernel_size=3, padding=1, groups=inner_dim * 3, bias=bias)
+        self.project_out = nn.Conv2d(inner_dim, dim, kernel_size=1, bias=bias)
         self.act = nn.ReLU()
 
     def attention_forward(self, qkv):
-        q, k, v = qkv.chunk(3, dim=1)
-        q = rearrange(q, 'b (head c) h w -> b head c (h w)', head=self.num_heads)
-        k = rearrange(k, 'b (head c) h w -> b head c (h w)', head=self.num_heads)
-        v = rearrange(v, 'b (head c) h w -> b head c (h w)', head=self.num_heads)
+        q, k, v = rearrange(qkv,'b (three head c) h w -> three b head c (h w)', three=3, head=self.num_heads)
 
         q = nn.functional.normalize(q, dim=-1)
         k = nn.functional.normalize(k, dim=-1)
@@ -196,7 +194,7 @@ class SparseGSA(nn.Module):
 # ---------------------------------------------------------------------------------------------------------------------
 # BuildBlocks
 class RHDTG(nn.Module):
-    def __init__(self, dim, blocks=5):
+    def __init__(self, dim, blocks=6):
         super(RHDTG, self).__init__()
         body = nn.ModuleList()
         for _ in range(blocks):
