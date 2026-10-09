@@ -89,6 +89,9 @@ class SparseAttention(nn.Module):
 
     def attention_forward(self, qkv):
         q, k, v = qkv.chunk(3, dim=1)
+        q = nn.functional.avg_pool2d(q, kernel_size=2, stride=2)
+        k = nn.functional.avg_pool2d(k, kernel_size=2, stride=2)
+
         q = rearrange(q, 'b (head c) h w -> b head c (h w)', head=self.num_heads)
         k = rearrange(k, 'b (head c) h w -> b head c (h w)', head=self.num_heads)
         v = rearrange(v, 'b (head c) h w -> b head c (h w)', head=self.num_heads)
@@ -196,7 +199,7 @@ class SparseGSA(nn.Module):
 # ---------------------------------------------------------------------------------------------------------------------
 # BuildBlocks
 class RHDTG(nn.Module):
-    def __init__(self, dim, blocks=5):
+    def __init__(self, dim, blocks=4):
         super(RHDTG, self).__init__()
         body = nn.ModuleList()
         for _ in range(blocks):
@@ -242,7 +245,7 @@ class Upsample(nn.Sequential):
 # ---------------------------------------------------------------------------------------------------------------------
 # Network
 class DLGSANet(nn.Module):
-    def __init__(self, dim=64, groups=6, scale=4, upsampler = "pixelshuffledirect"):
+    def __init__(self, dim=64, groups=8, scale=4, upsampler = "pixelshuffledirect"):
         super(DLGSANet, self).__init__()
         self.register_buffer('mean', torch.tensor([0.5, 0.5, 0.5]).view(1, 3, 1, 1))
         self.first_part = nn.Conv2d(3, dim, kernel_size=3, padding=1, bias=False)
