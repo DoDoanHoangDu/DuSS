@@ -242,7 +242,7 @@ class Upsample(nn.Sequential):
 # ---------------------------------------------------------------------------------------------------------------------
 # Network
 class DLGSANet(nn.Module):
-    def __init__(self, dim=64, groups=6, scale=4, upsampler = "pixelshuffledirect"):
+    def __init__(self, dim=64, groups=6, scale=4, upsampler = "pixelshuffle"):
         super(DLGSANet, self).__init__()
         self.register_buffer('mean', torch.tensor([0.5, 0.5, 0.5]).view(1, 3, 1, 1))
         self.first_part = nn.Conv2d(3, dim, kernel_size=3, padding=1, bias=False)
