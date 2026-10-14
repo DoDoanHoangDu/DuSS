@@ -35,3 +35,11 @@
 {"model_type": "FasterRCAN", "learning_rate": 1.25e-05, "epochs": 200, "psnr": 28.899843215942383, "ssim": 0.8337176277852798}
 {"model_type": "FasterRCAN", "learning_rate": 6.25e-06, "epochs": 200, "psnr": 28.928342819213867, "ssim": 0.8342567284613202}
 {"model_type": "FasterRCAN", "learning_rate": 3.125e-06, "epochs": 200, "psnr": 28.938047409057617, "ssim": 0.8345233241359675}
+{"model_type": "DLGSANet", "learning_rate": 0.001, "epochs": 200, "psnr": 26.992111206054688, "ssim": 0.7825051865508825}
+{"model_type": "DLGSANet", "learning_rate": 0.0005, "epochs": 200, "psnr": 27.4615535736084, "ssim": 0.7958234014444682}
+{"model_type": "DLGSANet", "learning_rate": 0.00025, "epochs": 200, "psnr": 28.497703552246094, "ssim": 0.8237054427526216}
+{"model_type": "DLGSANet", "learning_rate": 0.000125, "epochs": 200, "psnr": 28.689796447753906, "ssim": 0.8280848853569027}
+{"model_type": "DLGSANet", "learning_rate": 6.25e-05, "epochs": 200, "psnr": 28.78571319580078, "ssim": 0.8312105457196786}
+{"model_type": "DLGSANet", "learning_rate": 3.125e-05, "epochs": 200, "psnr": 28.811494827270508, "ssim": 0.8318867235367792}
+{"model_type": "DLGSANet", "learning_rate": 1.5625e-05, "epochs": 200, "psnr": 28.828771591186523, "ssim": 0.8320876321847398}
+{"model_type": "DLGSANet", "learning_rate": 7.8125e-06, "epochs": 200, "psnr": 28.83951187133789, "ssim": 0.8322514358526388}
