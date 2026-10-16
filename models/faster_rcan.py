@@ -42,21 +42,12 @@ class ResidualGroupAttention(nn.Module):
     def forward(self, x):
         return x + self.body(x)
 
-class Upsampler(nn.Sequential):
-    def __init__(self, num_filters = 128, ratio = 4):
-        layers = []
-        if ratio == 2 or ratio == 4:
-            layers.append(nn.Conv2d(num_filters, num_filters * 4, kernel_size=3, stride=1, padding=1, bias=True))
-            layers.append(nn.PixelShuffle(2))
-            if ratio == 4:
-                layers.append(nn.Conv2d(num_filters, num_filters * 4, kernel_size=3, stride=1, padding=1, bias=True))
-                layers.append(nn.PixelShuffle(2))
-        elif ratio == 3:
-            layers.append(nn.Conv2d(num_filters, num_filters * 9, kernel_size=3, stride=1, padding=1, bias=True))
-            layers.append(nn.PixelShuffle(3))
-        else:
-            raise NotImplementedError
-        super(Upsampler, self).__init__(*layers)
+class UpsampleOneStep(nn.Sequential):
+    def __init__(self, scale, num_filters):
+        m = []
+        m.append(nn.Conv2d(num_filters, 3 * (scale**2), kernel_size=3, padding=1))
+        m.append(nn.PixelShuffle(scale))
+        super(UpsampleOneStep, self).__init__(*m)
 
 class FasterRCAN(nn.Module):
     def __init__(self,big = 128, small = 64, num_groups = 10, ratio = 4):
@@ -82,8 +73,8 @@ class FasterRCAN(nn.Module):
             nn.PReLU(big),
         )
         self.last_part = nn.Sequential(
-            Upsampler(big,ratio),
-            nn.Conv2d(big, 3, kernel_size=3, stride=1, padding=1, bias=True)
+            UpsampleOneStep(ratio,big),
+            #nn.Conv2d(big, 3, kernel_size=3, stride=1, padding=1, bias=True)
         )
     def forward(self, x):
         x = self.first_part(x)
