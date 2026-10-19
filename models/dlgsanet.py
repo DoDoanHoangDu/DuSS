@@ -37,42 +37,36 @@ class FeedForward(nn.Module):
         return x
 
 # ---------------------------------------------------------------------------------------------------------------------
-# IDynamicDWConvBlock
-"""class DynamicConv(nn.Module):
-    def __init__(self, channels, kernel_size, group_channels, bias=True):
-        super().__init__()
-        assert channels % group_channels == 0
-        self.k = kernel_size
-        self.groups = channels // group_channels
-        hidden = channels // 4
-
-        self.hypernet = nn.Sequential(
-            nn.Conv2d(channels, hidden, 1, bias=bias),
-            nn.Conv2d(hidden, hidden, kernel_size, padding=kernel_size // 2, groups=hidden, bias=bias),
-            nn.Conv2d(hidden, self.groups * kernel_size**2, 1, bias=bias),
+# ResidualBlock
+class ChannelAttention(nn.Module):
+    def __init__(self, channels, reduction_rate=16):
+        super(ChannelAttention, self).__init__()
+        self.squeeze = nn.AdaptiveAvgPool2d(1)
+        self.excitation = nn.Sequential(
+            nn.Conv2d(in_channels=channels, out_channels=channels // reduction_rate, kernel_size=1, bias=True),
+            nn.ReLU(),
+            nn.Conv2d(in_channels=channels // reduction_rate, out_channels=channels, kernel_size=1, bias=True)
         )
+        self.sigmoid = nn.Sigmoid()
 
     def forward(self, x):
-        B, C, H, W = x.shape
-        G, K = self.groups, self.k
-        weight = self.hypernet(x).view(B, G, K*K, H, W)
-        patches = nn.functional.unfold(x, K, padding=K//2)
-        patches = patches.view(B, G, C//G, K*K, H, W)
-        return torch.einsum('bgkhw,bgckhw->bgchw', weight, patches).reshape(B, C, H, W)"""
-from models.dynamic_conv import DynamicConv
+        avg_feat = self.squeeze(x)
+        avg_out = self.excitation(avg_feat)
+        attention = self.sigmoid(avg_out)
+        return attention * x
 
-class DynamicConvBlock(nn.Module):
-    def __init__(self, dim, kernel_size, group_channels, squeeze=2):
+class ConvAttentionBlock(nn.Module):
+    def __init__(self, dim):
         super().__init__()
-        self.conv0 = nn.Conv2d(dim, dim//squeeze, 1, bias=False)
-        self.conv = DynamicConv(dim//squeeze, kernel_size, group_channels)
-        self.conv1 = nn.Conv2d(dim//squeeze, dim, 1, bias=False)
+        self.block = nn.Sequential(
+            nn.Conv2d(dim, dim, 3, padding=1),
+            nn.PReLU(dim),
+            nn.Conv2d(dim, dim, 3, padding=1),
+        )
+        self.attention = ChannelAttention(dim)
 
     def forward(self, x):
-        x = self.conv0(x)
-        x = self.conv(x)
-        x = self.conv1(x)
-        return x
+        return self.attention(self.block(x))
 
 # ---------------------------------------------------------------------------------------------------------------------
 # Multi-DConv Head Transposed Self-Attention (MDTA)
@@ -168,15 +162,15 @@ class SparseAttention(nn.Module):
 
 # ---------------------------------------------------------------------------------------------------------------------
 class MHDLSA(nn.Module):
-    def __init__(self, dim, kernel_size=7, group_channels=8):
-        super(MHDLSA, self).__init__()
+    def __init__(self, dim):
+        super().__init__()
         self.norm1 = LayerNorm(dim)
-        self.IDynamicDWConv = DynamicConvBlock(dim, kernel_size, group_channels)
+        self.block = ConvAttentionBlock(dim)
         self.norm2 = LayerNorm(dim)
         self.ffn = FeedForward(dim)
 
     def forward(self, x):
-        x = self.IDynamicDWConv(self.norm1(x)) + x
+        x = self.block(self.norm1(x)) + x
         x = self.ffn(self.norm2(x)) + x
         return x
 
