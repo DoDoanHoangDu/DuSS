@@ -40,3 +40,4 @@
 {"model_type": "DLGSANet", "learning_rate": 0.00025, "epochs": 200, "psnr": 27.958236694335938, "ssim": 0.8099338257343309}
 {"model_type": "DLGSANet", "learning_rate": 0.000125, "epochs": 200, "psnr": 28.415990829467773, "ssim": 0.8209837674060709}
 {"model_type": "DLGSANet", "learning_rate": 6.25e-05, "epochs": 200, "psnr": 28.5904483795166, "ssim": 0.8260023649699525}
+{"model_type": "DLGSANet", "learning_rate": 3.125e-05, "epochs": 200, "psnr": 28.67438316345215, "ssim": 0.827916481019617}
