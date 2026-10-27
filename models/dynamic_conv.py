@@ -414,7 +414,7 @@ class DynamicConv(nn.Module):
 
         self.kernel_size = kernel_size
         self.groups = channels // group_channels
-        hidden = channels // 1
+        hidden = channels // 2
         self.hypernet = nn.Sequential(
             nn.Conv2d(channels, hidden, kernel_size=1, bias=bias),
             nn.Conv2d(hidden, hidden, kernel_size=kernel_size, padding=kernel_size // 2, groups=hidden, bias=bias),
